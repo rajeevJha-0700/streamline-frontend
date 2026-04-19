@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: '',                 //we are using credentials   
+    baseURL: 'https://streamline-backend-3kuo.onrender.com',        
     withCredentials: true        
 });
 
