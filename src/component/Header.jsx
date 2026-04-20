@@ -22,13 +22,8 @@ function Header() {
 
     const isActive = (path) => location.pathname === path;
 
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
-
-    const closeMobileMenu = () => {
-        setIsMobileMenuOpen(false);
-    };
+    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
     return (
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200">
@@ -80,7 +75,7 @@ function Header() {
                     )}
                 </nav>
 
-                {/* Mobile Menu Button */}
+                {/* Mobile Hamburger Button */}
                 <button 
                     onClick={toggleMobileMenu}
                     className="md:hidden p-3 text-gray-700 hover:bg-gray-100 rounded-2xl transition-all"
@@ -101,63 +96,40 @@ function Header() {
                 </button>
             </div>
 
-            {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 bg-black/70 z-40" onClick={closeMobileMenu}>
-                    <div 
-                        className="bg-white absolute top-0 right-0 h-full w-80 shadow-2xl transform transition-transform duration-300 ease-out"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="p-6">
-                            <div className="flex justify-between items-center mb-10">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center">
-                                        <span className="text-white text-2xl font-bold">S</span>
-                                    </div>
-                                    <h2 className="font-serif text-3xl text-gray-900">StreamLine</h2>
-                                </div>
-                                <button 
-                                    onClick={closeMobileMenu}
-                                    className="p-2 text-gray-500 hover:text-gray-700"
-                                >
-                                    ✕
-                                </button>
-                            </div>
+            {/* ==================== SLIDING MOBILE MENU ==================== */}
+            <div className={`md:hidden fixed top-[73px] left-0 right-0 bg-white shadow-xl border-t border-gray-100 z-50 transition-all duration-300 ease-out overflow-hidden
+                ${isMobileMenuOpen ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}`}
+            >
+                <div className="px-6 py-6 flex flex-col gap-2">
+                    {NavigationItems.map((item) =>
+                        item.show ? (
+                            <button
+                                key={item.name}
+                                onClick={() => {
+                                    navigate(item.path);
+                                    closeMobileMenu();
+                                }}
+                                className={`text-left px-6 py-4 text-lg font-medium rounded-2xl transition-all
+                                    ${isActive(item.path)
+                                        ? "bg-red-600 text-white"
+                                        : "text-gray-700 hover:bg-gray-100"
+                                    }`}
+                            >
+                                {item.name}
+                            </button>
+                        ) : null
+                    )}
 
-                            {/* Mobile Navigation Links */}
-                            <div className="flex flex-col gap-2">
-                                {NavigationItems.map((item) =>
-                                    item.show ? (
-                                        <button
-                                            key={item.name}
-                                            onClick={() => {
-                                                navigate(item.path);
-                                                closeMobileMenu();
-                                            }}
-                                            className={`text-left px-6 py-4 rounded-2xl text-lg font-medium transition-all
-                                                ${isActive(item.path)
-                                                    ? "bg-red-600 text-white"
-                                                    : "text-gray-700 hover:bg-gray-100"
-                                                }`}
-                                        >
-                                            {item.name}
-                                        </button>
-                                    ) : null
-                                )}
-
-                                {/* Logout in Mobile */}
-                                {authStatus && (
-                                    <div className="mt-4 px-6">
-                                        <Logout 
-                                            className="w-full text-left px-6 py-4 rounded-2xl text-lg font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all"
-                                        />
-                                    </div>
-                                )}
-                            </div>
+                    {/* Logout in Mobile Menu */}
+                    {authStatus && (
+                        <div className="pt-4">
+                            <Logout 
+                                className="w-full text-left px-6 py-4 text-lg font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-all"
+                            />
                         </div>
-                    </div>
+                    )}
                 </div>
-            )}
+            </div>
         </header>
     );
 }
