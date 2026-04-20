@@ -25,7 +25,7 @@ function VideoInfo({ video, formatCount }) {
 }, [owner?._id]);
 
     const handleSubscription = async () => {
-        if (!currentUserId || !owner._id) return;
+        if (!owner._id) return;
 
         setSubLoading(true);
 
